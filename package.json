@@ -1,0 +1,17 @@
+{
+  "name": "drivewise",
+  "private": true,
+  "workspaces": ["packages/*", "apps/*"],
+  "scripts": {
+    "dev:api": "cd apps/api && bun --watch src/index.ts",
+    "dev:web": "cd apps/web && bun run dev",
+    "build": "bun run --filter './apps/*' build",
+    "db:generate": "cd apps/api && bunx drizzle-kit generate",
+    "db:migrate": "cd apps/api && bunx drizzle-kit migrate",
+    "db:seed": "cd apps/api && bun src/shared/db/seed.ts",
+    "db:studio": "cd apps/api && bunx drizzle-kit studio",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "typecheck": "bun run --filter '*' typecheck"
+  }
+}
