@@ -26,6 +26,11 @@ services:
     volumes:
       - ./apps/api:/app/apps/api
       - ./packages/shared:/app/packages/shared
+      - api_root_node_modules:/app/node_modules
+      - api_pkg_node_modules:/app/apps/api/node_modules
+      # Shadows packages/shared/node_modules with the Bun-installed version
+      # (symlinks here point into api_root_node_modules/.bun/...)
+      - api_shared_node_modules:/app/packages/shared/node_modules
     environment:
       DATABASE_URL: postgres://drivewise:drivewise_dev@db:5432/drivewise
       NODE_ENV: development
@@ -44,6 +49,10 @@ services:
     volumes:
       - ./apps/web:/app/apps/web
       - ./packages/shared:/app/packages/shared
+      - web_root_node_modules:/app/node_modules
+      - web_pkg_node_modules:/app/apps/web/node_modules
+      # Shadows packages/shared/node_modules with the Bun-installed version
+      - web_shared_node_modules:/app/packages/shared/node_modules
     environment:
       NODE_ENV: development
       API_TARGET: http://api:3000
@@ -53,3 +62,9 @@ services:
 
 volumes:
   pgdata_dev:
+  api_root_node_modules:
+  api_pkg_node_modules:
+  api_shared_node_modules:
+  web_root_node_modules:
+  web_pkg_node_modules:
+  web_shared_node_modules:
