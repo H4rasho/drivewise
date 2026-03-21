@@ -10,12 +10,9 @@ RUN bun install --frozen-lockfile
 FROM oven/bun:1.2-alpine AS runtime
 WORKDIR /app
 
-# Copy root node_modules (includes .bun virtual store — symlink targets live here)
+# Bun hoists all workspace deps to root node_modules — no per-package node_modules needed
 COPY --from=deps /app/node_modules ./node_modules
-# Copy workspace package node_modules (symlinks that point into the .bun store above)
-COPY --from=deps /app/packages/shared/node_modules ./packages/shared/node_modules
 
-# Copy source files (.dockerignore excludes node_modules, so the COPY above is safe)
 COPY packages/shared ./packages/shared
 COPY apps/api ./apps/api
 
