@@ -11,24 +11,39 @@ const navItems = [
 
 export default function BottomNav() {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border">
-      <div className="flex items-center justify-around h-16 max-w-lg mx-auto">
+    <nav className="fixed bottom-6 left-0 right-0 z-50 flex justify-center pointer-events-none">
+      <div
+        className="flex items-center gap-1 px-3 py-2 rounded-full border border-white/8 pointer-events-auto"
+        style={{
+          background: "rgba(28, 28, 26, 0.88)",
+          backdropFilter: "blur(24px)",
+          WebkitBackdropFilter: "blur(24px)",
+          boxShadow: "0 8px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)",
+        }}
+      >
         {navItems.map(({ to, icon: Icon, label }) => (
           <NavLink
             key={to}
             to={to}
             end={to === "/"}
+            title={label}
             className={({ isActive }) =>
               cn(
-                "flex flex-col items-center gap-1 px-4 py-2 text-xs transition-colors",
+                "relative flex items-center justify-center w-12 h-12 rounded-full transition-all duration-200",
                 isActive
-                  ? "text-primary font-semibold"
+                  ? "text-primary"
                   : "text-muted-foreground hover:text-foreground"
               )
             }
           >
-            <Icon size={22} />
-            <span>{label}</span>
+            {({ isActive }) => (
+              <>
+                {isActive && (
+                  <span className="absolute inset-0 rounded-full bg-primary/10" />
+                )}
+                <Icon size={20} strokeWidth={isActive ? 2.5 : 1.5} />
+              </>
+            )}
           </NavLink>
         ))}
       </div>
