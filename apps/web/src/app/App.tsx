@@ -6,6 +6,8 @@ import ParkingDetailPage from "../parking/pages/ParkingDetailPage";
 import MaintenancePage from "../maintenance/pages/MaintenancePage";
 import CarePage from "../care/pages/CarePage";
 import LearningPage from "../learning/pages/LearningPage";
+import SignalsPage from "../learning/pages/SignalsPage";
+import RulesPage from "../learning/pages/RulesPage";
 
 export default function App() {
   return (
@@ -17,6 +19,8 @@ export default function App() {
         <Route path="/maintenance" element={<MaintenancePage />} />
         <Route path="/care" element={<CarePage />} />
         <Route path="/learning" element={<LearningPage />} />
+        <Route path="/learning/signals" element={<SignalsPage />} />
+        <Route path="/learning/rules" element={<RulesPage />} />
       </Route>
     </Routes>
   );
