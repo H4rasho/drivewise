@@ -1,10 +1,12 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 import { VitePWA } from "vite-plugin-pwa";
 import path from "path";
 
 export default defineConfig({
   plugins: [
+    tailwindcss(),
     react(),
     VitePWA({
       registerType: "autoUpdate",
@@ -42,9 +44,13 @@ export default defineConfig({
     alias: { "@": path.resolve(__dirname, "./src") },
   },
   server: {
+    host: true,
+    hmr: {
+      clientPort: Number(process.env.HMR_CLIENT_PORT) || undefined,
+    },
     proxy: {
       "/api": {
-        target: "http://localhost:3000",
+        target: process.env.API_TARGET || "http://localhost:3000",
         changeOrigin: true,
       },
     },

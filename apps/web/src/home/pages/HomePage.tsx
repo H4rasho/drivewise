@@ -37,7 +37,9 @@ export default function HomePage() {
     <div className="px-4 py-8 max-w-lg mx-auto">
       <div className="mb-8">
         <h1 className="text-2xl font-bold tracking-tight">DriveWise</h1>
-        <p className="text-muted-foreground mt-1">Tu guía para aprender a manejar</p>
+        <p className="text-muted-foreground mt-1">
+          Tu guía para aprender a manejar en 2026
+        </p>
       </div>
       <div className="grid grid-cols-2 gap-3">
         {modules.map(({ to, icon: Icon, title, description, color }) => (
@@ -50,7 +52,9 @@ export default function HomePage() {
               <Icon size={20} />
             </div>
             <h2 className="font-semibold text-sm">{title}</h2>
-            <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{description}</p>
+            <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+              {description}
+            </p>
           </Link>
         ))}
       </div>

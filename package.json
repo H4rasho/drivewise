@@ -12,6 +12,8 @@
     "db:studio": "cd apps/api && bunx drizzle-kit studio",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
+    "docker:dev": "docker compose -f docker-compose.dev.yml up --build",
+    "docker:dev:down": "docker compose -f docker-compose.dev.yml down",
     "typecheck": "bun run --filter '*' typecheck"
   }
 }
