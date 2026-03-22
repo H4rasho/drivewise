@@ -32,7 +32,11 @@ services:
       # (symlinks here point into api_root_node_modules/.bun/...)
       - api_shared_node_modules:/app/packages/shared/node_modules
     environment:
-      DATABASE_URL: postgres://drivewise:drivewise_dev@db:5432/drivewise
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: drivewise
+      POSTGRES_USER: drivewise
+      POSTGRES_PASSWORD: drivewise_dev
       NODE_ENV: development
       API_PORT: 3000
     depends_on:

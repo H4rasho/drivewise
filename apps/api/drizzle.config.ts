@@ -5,6 +5,10 @@ export default defineConfig({
   out: "./src/shared/db/migrations",
   dialect: "postgresql",
   dbCredentials: {
-    url: process.env.DATABASE_URL!,
+    host: process.env.POSTGRES_HOST ?? "localhost",
+    port: Number(process.env.POSTGRES_PORT ?? 5432),
+    database: process.env.POSTGRES_DB!,
+    user: process.env.POSTGRES_USER!,
+    password: process.env.POSTGRES_PASSWORD!,
   },
 });
