@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import VehicleSelector from "../components/VehicleSelector";
 
 const parkingTypes = [
   { type: "paralelo", num: "01", label: "Paralelo", description: "Entre dos autos en fila" },
@@ -29,7 +30,7 @@ export default function ParkingHubPage() {
 
       {/* Header */}
       <motion.div
-        className="mb-14"
+        className="mb-8"
         initial={{ opacity: 0, y: -16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.05, ease: "easeOut" }}
@@ -48,6 +49,19 @@ export default function ParkingHubPage() {
         </div>
       </motion.div>
 
+      {/* Vehicle selector */}
+      <motion.div
+        className="mb-8"
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, delay: 0.12, ease: "easeOut" }}
+      >
+        <p className="text-[10px] text-muted-foreground/60 tracking-widest uppercase mb-2">
+          Mi vehículo
+        </p>
+        <VehicleSelector />
+      </motion.div>
+
       {/* Types */}
       <div className="flex flex-col">
         {parkingTypes.map(({ type, num, label, description }, i) => (
@@ -55,7 +69,7 @@ export default function ParkingHubPage() {
             key={type}
             initial={{ opacity: 0, x: -16 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.35, delay: 0.12 + i * 0.08, ease: "easeOut" }}
+            transition={{ duration: 0.35, delay: 0.18 + i * 0.08, ease: "easeOut" }}
           >
             <Link
               to={`/parking/${type}`}
