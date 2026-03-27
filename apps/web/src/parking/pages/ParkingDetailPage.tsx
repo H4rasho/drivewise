@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router";
 import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Lightbulb, Car } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { api } from "@/shared/lib/api";
 import { useVehicleStore } from "@/shared/stores/vehicle.store";
 import { useProgressStore } from "@/shared/stores/progress.store";
-import type { ParkingTip, ParkingType } from "@drivewise/shared";
+import type { ParkingType } from "@drivewise/shared";
 import ParkingAnimation from "../animations/ParkingAnimation";
 import { getVehicleTip } from "../lib/vehicleTips";
+import { getParkingGuide } from "../lib/parkingData";
 
 const typeLabels: Record<ParkingType, string> = {
   paralelo: "Paralelo",
@@ -16,10 +16,10 @@ const typeLabels: Record<ParkingType, string> = {
   pendiente: "En Pendiente",
 };
 
+const validTypes: ParkingType[] = ["paralelo", "bateria", "diagonal", "pendiente"];
+
 export default function ParkingDetailPage() {
-  const { type } = useParams<{ type: ParkingType }>();
-  const [tip, setTip] = useState<ParkingTip | null>(null);
-  const [error, setError] = useState(false);
+  const { type } = useParams<{ type: string }>();
   const [step, setStep] = useState(0);
   const [done, setDone] = useState(false);
 
@@ -27,20 +27,11 @@ export default function ParkingDetailPage() {
   const { markModuleComplete } = useProgressStore();
 
   useEffect(() => {
-    if (!type) return;
-    api.parking
-      .tipByType(type as ParkingType)
-      .then(setTip)
-      .catch(() => setError(true));
-  }, [type]);
-
-  // Reset step when type changes
-  useEffect(() => {
     setStep(0);
     setDone(false);
   }, [type]);
 
-  if (error) {
+  if (!type || !validTypes.includes(type as ParkingType)) {
     return (
       <div className="px-5 pt-14 pb-4 max-w-lg mx-auto">
         <Link
@@ -50,26 +41,17 @@ export default function ParkingDetailPage() {
           <ArrowLeft size={14} />
           Volver
         </Link>
-        <p className="text-muted-foreground text-sm">No se pudo cargar la guía.</p>
+        <p className="text-muted-foreground text-sm">Tipo de estacionamiento no válido.</p>
       </div>
     );
   }
 
-  if (!tip) {
-    return (
-      <div className="px-5 pt-14 pb-4 max-w-lg mx-auto">
-        <div className="h-4 w-32 bg-secondary rounded animate-pulse mb-10" />
-        <div className="aspect-[4/3] bg-secondary rounded-2xl animate-pulse mb-6" />
-        <div className="h-16 w-48 bg-secondary rounded animate-pulse mb-4" />
-        <div className="h-24 bg-secondary rounded-xl animate-pulse" />
-      </div>
-    );
-  }
-
-  const currentStep = tip.steps[step];
+  const parkingType = type as ParkingType;
+  const guide = getParkingGuide(parkingType);
+  const currentStep = guide.steps[step];
   const isFirst = step === 0;
-  const isLast = step === tip.steps.length - 1;
-  const vehicleTip = getVehicleTip(tip.type, vehicle);
+  const isLast = step === guide.steps.length - 1;
+  const vehicleTip = getVehicleTip(parkingType, vehicle);
 
   const handleNext = () => {
     if (isLast) {
@@ -117,12 +99,12 @@ export default function ParkingDetailPage() {
           className="text-6xl leading-none text-foreground"
           style={{ fontFamily: "'Bebas Neue', cursive", letterSpacing: "0.03em" }}
         >
-          {typeLabels[tip.type]}
+          {typeLabels[parkingType]}
         </h1>
         <div className="flex items-center gap-3 mt-2">
           <div className="w-6 h-px bg-primary" />
           <p className="text-muted-foreground text-xs font-light tracking-widest uppercase">
-            {done ? "Completado" : `Paso ${step + 1} de ${tip.steps.length}`}
+            {done ? "Completado" : `Paso ${step + 1} de ${guide.steps.length}`}
           </p>
         </div>
       </motion.div>
@@ -130,17 +112,22 @@ export default function ParkingDetailPage() {
       {/* SVG Animation */}
       <motion.div
         className="rounded-2xl overflow-hidden bg-[#1a1a1a] border border-border/30 mb-5"
-        style={{ aspectRatio: tip.type === "paralelo" ? "260/420" : tip.type === "pendiente" ? "300/340" : "320/310" }}
+        style={{
+          aspectRatio:
+            parkingType === "paralelo" ? "260/420" :
+            parkingType === "pendiente" ? "300/340" :
+            "320/310",
+        }}
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.4, delay: 0.1 }}
       >
-        <ParkingAnimation type={tip.type} step={done ? tip.steps.length - 1 : step} />
+        <ParkingAnimation type={parkingType} step={done ? guide.steps.length - 1 : step} />
       </motion.div>
 
       {/* Step progress dots */}
       <div className="flex items-center justify-center gap-2 mb-5">
-        {tip.steps.map((_, i) => (
+        {guide.steps.map((_, i) => (
           <button
             key={i}
             onClick={() => { setStep(i); setDone(false); }}

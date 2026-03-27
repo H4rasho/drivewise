@@ -1,6 +1,4 @@
 import type {
-  ParkingTip,
-  ParkingType,
   MaintenanceItem,
   Signal,
   SignalCategory,
@@ -8,8 +6,6 @@ import type {
   QuizQuestion,
   QuizSubmit,
   QuizResult,
-  DeviceProgress,
-  ProgressSync,
 } from "@drivewise/shared";
 
 type ApiOk<T> = { ok: true; data: T };
@@ -35,10 +31,6 @@ async function post<T>(path: string, body: unknown): Promise<T> {
 }
 
 export const api = {
-  parking: {
-    tips: () => get<ParkingTip[]>("/parking/tips"),
-    tipByType: (type: ParkingType) => get<ParkingTip>(`/parking/tips/${type}`),
-  },
   maintenance: {
     schedule: () => get<MaintenanceItem[]>("/maintenance/schedule"),
   },
@@ -56,9 +48,5 @@ export const api = {
   quiz: {
     generate: (limit = 10) => get<QuizQuestion[]>(`/quiz/generate?limit=${limit}`),
     submit: (body: QuizSubmit) => post<QuizResult>("/quiz/submit", body),
-  },
-  progress: {
-    get: (deviceId: string) => get<DeviceProgress>(`/progress/${deviceId}`),
-    sync: (body: ProgressSync) => post<DeviceProgress>("/progress/sync", body),
   },
 };
